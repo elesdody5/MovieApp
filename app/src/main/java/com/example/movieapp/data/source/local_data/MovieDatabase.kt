@@ -1,10 +1,10 @@
-package com.example.movieapp.data.local_data
+package com.example.movieapp.data.source.local_data
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.movieapp.data.local_data.entity.LocalMovie
+import com.example.movieapp.data.source.local_data.entity.LocalMovie
 
 /**
  * A database that stores Movies information.

@@ -4,9 +4,9 @@ import androidx.room.Room
 import androidx.room.paging.LimitOffsetDataSource
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.movieapp.data.local_data.MovieDao
-import com.example.movieapp.data.local_data.MovieDatabase
-import com.example.movieapp.data.local_data.entity.LocalMovie
+import com.example.movieapp.data.source.local_data.MovieDao
+import com.example.movieapp.data.source.local_data.MovieDatabase
+import com.example.movieapp.data.source.local_data.entity.LocalMovie
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

@@ -55,6 +55,17 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
     // Paging
     implementation "androidx.paging:paging-runtime:$pagingVersion"
+// Retrofit for networking
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
+    // Moshi for parsing the JSON format
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    // Dependencies for local unit tests
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
 
 }
