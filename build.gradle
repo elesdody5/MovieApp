@@ -20,6 +20,8 @@ buildscript {
         junitVersion = '4.12'
         mockitoVersion = '2.8.9'
         daggerVersion = '2.25.4'
+        coroutinesVersion = '1.2.1'
+        archTestingVersion = '2.0.0'
 
     }
     dependencies {

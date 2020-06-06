@@ -38,5 +38,5 @@ data class Movie(
 
 data class MovieListResult(
     val data: LiveData<PagedList<Movie>>,
-    val networkErrors: LiveData<String>
+    val networkErrors: LiveData<Boolean>
 )

@@ -1,5 +1,6 @@
 package com.example.movieapp.data.repository
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +10,7 @@ import com.example.movieapp.data.source.local_data.LocalDataSource
 import com.example.movieapp.data.source.remote_data.NetworkMovieContainer
 import com.example.movieapp.data.source.remote_data.RemoteDataSource
 import com.example.movieapp.data.source.remote_data.asDatabaseModel
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
@@ -20,17 +21,18 @@ import javax.inject.Inject
  **/
 class MovieBoundaryCallback @Inject constructor(
      val service: RemoteDataSource,
-     val cache: LocalDataSource
+     val cache: LocalDataSource,
+     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PagedList.BoundaryCallback<Movie>() {
 
 
     // keep the last requested page. When the request is successful, increment the page number.
     private var lastRequestedPage = 1
 
-    private val _networkErrors = MutableLiveData<String>()
+    private val _networkErrors = MutableLiveData<Boolean>()
 
     // LiveData of network errors.
-    val networkErrors: LiveData<String>
+    val networkErrors: LiveData<Boolean>
         get() = _networkErrors
 
     // avoid triggering multiple requests in the same time
@@ -40,7 +42,6 @@ class MovieBoundaryCallback @Inject constructor(
      * Database returned 0 items. We should query the backend for more items.
      */
     override fun onZeroItemsLoaded() {
-        Log.d("RepoBoundaryCallback", "onZeroItemsLoaded")
         requestAndSaveData()
     }
 
@@ -48,35 +49,24 @@ class MovieBoundaryCallback @Inject constructor(
      * When all items in the database were loaded, we need to query the backend for more items.
      */
     override fun onItemAtEndLoaded(itemAtEnd: Movie) {
-        Log.d("BoundaryCallback", "onItemAtEndLoaded")
         requestAndSaveData()
     }
 
-     fun requestAndSaveData() {
+    private fun requestAndSaveData() {
         if (isRequestInProgress) return
-
         isRequestInProgress = true
-        service.getMovieList(lastRequestedPage).enqueue(object :
-            retrofit2.Callback<NetworkMovieContainer> {
-            override fun onFailure(call: Call<NetworkMovieContainer>, t: Throwable) {
-                _networkErrors.postValue(t.message)
-                isRequestInProgress = false
+         CoroutineScope(ioDispatcher).launch {
+             try {
+                 val movieList =  service.getMovieList(lastRequestedPage)
+                 cache.insert(movieList.asDatabaseModel())
+                 lastRequestedPage++
+                 isRequestInProgress = false
+             }catch (e:Exception){
+                 Log.d(ContentValues.TAG, "error ")
+                 _networkErrors.postValue(true)
+                 isRequestInProgress = false
+             }
 
-            }
-
-            override fun onResponse(
-                call: Call<NetworkMovieContainer>,
-                response: Response<NetworkMovieContainer>
-            ) {
-                response.body()?.let {
-                    val localMovies = it.asDatabaseModel()
-                    cache.insert(localMovies) {
-                        lastRequestedPage++
-                        isRequestInProgress = false
-                    }
-                }
-            }
-        })
-
+         }
     }
 }

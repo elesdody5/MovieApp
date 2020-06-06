@@ -8,9 +8,9 @@ import org.mockito.Mockito.mock
 
 class FakeLocalDataSource (var movieList:MutableList<Movie>):LocalDataSource{
 
-    override fun insert(movies: List<Movie>, insertFinished: () -> Unit) {
+    override fun insert(movies: List<Movie>) {
        movieList.addAll(movies)
-        insertFinished()
+
     }
 
     override fun getMovies(): DataSource.Factory<Int, Movie> {

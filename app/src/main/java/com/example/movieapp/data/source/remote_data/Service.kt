@@ -16,7 +16,7 @@ private const val TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/"
 const val TMDB_IMAGEURL = "https://image.tmdb.org/t/p/w500/"
 interface MovieApi {
     @GET("upcoming?api_key=${BuildConfig.API_KEY}&language=en-US")
-    fun getMovieList(@Query("page") page: Int):Call<NetworkMovieContainer>
+   suspend fun getMovieList(@Query("page") page: Int):NetworkMovieContainer
 }
 
 /**

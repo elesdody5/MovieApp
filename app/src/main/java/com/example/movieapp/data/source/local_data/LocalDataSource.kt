@@ -6,7 +6,7 @@ import com.example.android.devbyteviewer.domain.Movie
 import javax.inject.Inject
 
 interface LocalDataSource {
-    fun insert(movies: List<Movie>, insertFinished: () -> Unit)
+    fun insert(movies: List<Movie>)
     fun getMovies(): DataSource.Factory<Int, Movie>
 }
 
@@ -18,9 +18,8 @@ class MovieLocalDataSource @Inject constructor( val context: Context) : LocalDat
         dao = dataBase.movieDao
     }
 
-    override fun insert(movies: List<Movie>, insertFinished: () -> Unit) {
+    override fun insert(movies: List<Movie>) {
         dao.insert(movies)
-        insertFinished()
     }
 
     override fun getMovies(): DataSource.Factory<Int, Movie> {

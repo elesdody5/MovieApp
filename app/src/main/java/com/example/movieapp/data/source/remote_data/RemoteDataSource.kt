@@ -3,12 +3,12 @@ package com.example.movieapp.data.source.remote_data
 import retrofit2.Call
 
 interface RemoteDataSource {
-     fun getMovieList(page: Int): Call<NetworkMovieContainer>
+    suspend fun getMovieList(page: Int): NetworkMovieContainer
 }
 
 class MovieRemoteSource : RemoteDataSource {
 
-    override  fun getMovieList(page:Int): Call<NetworkMovieContainer> {
+    override suspend fun getMovieList(page:Int): NetworkMovieContainer {
         return Network.movieService.getMovieList(page)
     }
 }

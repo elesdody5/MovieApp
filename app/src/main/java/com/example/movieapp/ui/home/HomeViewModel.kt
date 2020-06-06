@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(repository: MovieGetway) : ViewModel() {
 
-        val movieResult = repository.getUpComingMovies()
+        private val movieResult = repository.getUpComingMovies()
         val movies: LiveData<PagedList<Movie>> = movieResult.data
-        val networkErrors: LiveData<String> = movieResult.networkErrors
-        var _openDetails = MutableLiveData<Movie>()
+        val networkErrors: LiveData<Boolean> = movieResult.networkErrors
+        private var _openDetails = MutableLiveData<Movie>()
     val openDetails :LiveData<Movie>
             get()=_openDetails
 

@@ -20,10 +20,10 @@ data class NetworkMovie(
     @Json(name = "release_date")
     val releaseDate: String="",
     @Json(name = "poster_path")
-    val posterPath: String?,
+    val posterPath: String?=null,
     @Json(name = "vote_average")
-    val rating: Double,
-    val overview:String
+    val rating: Double=0.0,
+    val overview:String=""
 )
 /**
  * Convert Network results to database objects

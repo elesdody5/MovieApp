@@ -4,9 +4,9 @@ import androidx.room.Room
 import androidx.room.paging.LimitOffsetDataSource
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.android.devbyteviewer.domain.Movie
 import com.example.movieapp.data.source.local_data.MovieDao
 import com.example.movieapp.data.source.local_data.MovieDatabase
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -38,7 +38,7 @@ class RoomTest {
     @Test
     @Throws(Exception::class)
     fun insertAndGetList() {
-        val movieList = listOf(LocalMovie(id = 1), LocalMovie(id = 2))
+        val movieList = listOf(Movie(id = 1), Movie(id = 2))
 
         movieDao.insert(movieList)
         val factory = movieDao.getMovies()

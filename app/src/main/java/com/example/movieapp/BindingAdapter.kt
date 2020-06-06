@@ -10,8 +10,10 @@ import coil.api.load
 */
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String?) {
-       imgView.load(imgUrl){
-              placeholder(R.drawable.loading_animation)
-              error(R.drawable.ic_broken_image)
+       imgUrl?.let {
+              imgView.load(imgUrl) {
+                     placeholder(R.drawable.loading_animation)
+                     error(R.drawable.ic_broken_image)
+              }
        }
 }
