@@ -6,25 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.example.android.devbyteviewer.domain.Movie
 import com.example.movieapp.data.source.local_data.LocalDataSource
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
 import com.example.movieapp.data.source.remote_data.NetworkMovieContainer
 import com.example.movieapp.data.source.remote_data.RemoteDataSource
 import com.example.movieapp.data.source.remote_data.asDatabaseModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.coroutineScope
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
+import javax.inject.Inject
 
 /**
  * This boundary callback gets notified when user reaches to the edges of the list for example when
  * the database cannot provide any more data.
  **/
-class MovieBoundaryCallback(
-    private val service: RemoteDataSource,
-    private val cache: LocalDataSource
-) : PagedList.BoundaryCallback<LocalMovie>() {
+class MovieBoundaryCallback @Inject constructor(
+     val service: RemoteDataSource,
+     val cache: LocalDataSource
+) : PagedList.BoundaryCallback<Movie>() {
 
 
     // keep the last requested page. When the request is successful, increment the page number.
@@ -50,21 +47,21 @@ class MovieBoundaryCallback(
     /**
      * When all items in the database were loaded, we need to query the backend for more items.
      */
-    override fun onItemAtEndLoaded(itemAtEnd: LocalMovie) {
+    override fun onItemAtEndLoaded(itemAtEnd: Movie) {
         Log.d("BoundaryCallback", "onItemAtEndLoaded")
         requestAndSaveData()
     }
 
-    private fun requestAndSaveData() {
+     fun requestAndSaveData() {
         if (isRequestInProgress) return
 
         isRequestInProgress = true
-
         service.getMovieList(lastRequestedPage).enqueue(object :
             retrofit2.Callback<NetworkMovieContainer> {
             override fun onFailure(call: Call<NetworkMovieContainer>, t: Throwable) {
                 _networkErrors.postValue(t.message)
                 isRequestInProgress = false
+
             }
 
             override fun onResponse(
@@ -72,8 +69,8 @@ class MovieBoundaryCallback(
                 response: Response<NetworkMovieContainer>
             ) {
                 response.body()?.let {
-                    val localMovie = it.asDatabaseModel()
-                    cache.insert(localMovie) {
+                    val localMovies = it.asDatabaseModel()
+                    cache.insert(localMovies) {
                         lastRequestedPage++
                         isRequestInProgress = false
                     }

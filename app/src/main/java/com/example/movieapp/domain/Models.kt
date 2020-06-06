@@ -17,28 +17,26 @@
 
 package com.example.android.devbyteviewer.domain
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
-
-/**
- * Domain objects are plain Kotlin data classes that represent the things in our app. These are the
- * objects that should be displayed on screen, or manipulated by the app.
- *
- * @see database for objects that are mapped to the database
- * @see network for objects that parse or prepare network calls
- */
-
-
+@Entity
+@Parcelize
 data class Movie(
-    val title: String,
-    val overview: String,
-    val posterPath: String,
-    val rating: Double,
-    val releaseDate: String
-)
+    @PrimaryKey
+    val id: Int = -1,
+    val title: String = "",
+    val releaseDate: String = "",
+    val posterPath: String = "",
+    val rating: Double = 0.0,
+    val overview: String = ""
+): Parcelable
+
 data class MovieListResult(
-    val data: LiveData<PagedList<LocalMovie>>,
+    val data: LiveData<PagedList<Movie>>,
     val networkErrors: LiveData<String>
 )

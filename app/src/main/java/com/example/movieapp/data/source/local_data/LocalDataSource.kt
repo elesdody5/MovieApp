@@ -1,16 +1,16 @@
 package com.example.movieapp.data.source.local_data
 
 import android.content.Context
-import android.content.IntentSender
 import androidx.paging.DataSource
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
+import com.example.android.devbyteviewer.domain.Movie
+import javax.inject.Inject
 
 interface LocalDataSource {
-    fun insert(movies: List<LocalMovie>, insertFinished: () -> Unit)
-    fun getMovies(): DataSource.Factory<Int, LocalMovie>
+    fun insert(movies: List<Movie>, insertFinished: () -> Unit)
+    fun getMovies(): DataSource.Factory<Int, Movie>
 }
 
-class MovieLocalDataSource(private val context: Context) : LocalDataSource {
+class MovieLocalDataSource @Inject constructor( val context: Context) : LocalDataSource {
     private val dao: MovieDao
 
     init {
@@ -18,12 +18,12 @@ class MovieLocalDataSource(private val context: Context) : LocalDataSource {
         dao = dataBase.movieDao
     }
 
-    override fun insert(movies: List<LocalMovie>, insertFinished: () -> Unit) {
+    override fun insert(movies: List<Movie>, insertFinished: () -> Unit) {
         dao.insert(movies)
         insertFinished()
     }
 
-    override fun getMovies(): DataSource.Factory<Int, LocalMovie> {
+    override fun getMovies(): DataSource.Factory<Int, Movie> {
         return dao.getMovies()
     }
 

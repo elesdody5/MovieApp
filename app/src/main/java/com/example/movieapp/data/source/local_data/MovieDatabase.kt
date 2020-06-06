@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
+import com.example.android.devbyteviewer.domain.Movie
 
 /**
  * A database that stores Movies information.
  * And a global method to get access to the database.
  *
  */
-@Database(entities = [LocalMovie::class], version = 1, exportSchema = false)
+@Database(entities = [Movie::class], version = 1, exportSchema = false)
 abstract class MovieDatabase : RoomDatabase() {
     /**
      * Connects the database to the DAO.
@@ -59,7 +59,7 @@ abstract class MovieDatabase : RoomDatabase() {
                         context.applicationContext,
                         MovieDatabase::class.java,
                         "movie_database"
-                    )
+                    ).allowMainThreadQueries()
                         .build()
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance

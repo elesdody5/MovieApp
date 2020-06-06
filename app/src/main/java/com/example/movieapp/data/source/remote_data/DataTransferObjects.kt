@@ -1,6 +1,6 @@
 package com.example.movieapp.data.source.remote_data
 
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
+import com.example.android.devbyteviewer.domain.Movie
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -13,13 +13,14 @@ import com.squareup.moshi.JsonClass
 data class NetworkMovieContainer(val results:List<NetworkMovie>)
 
 data class NetworkMovie(
+    @Json(name = "id")
     val id: Int,
     @Json(name = "original_title")
     val title: String="",
     @Json(name = "release_date")
     val releaseDate: String="",
     @Json(name = "poster_path")
-    val posterPath: String="",
+    val posterPath: String?,
     @Json(name = "vote_average")
     val rating: Double,
     val overview:String
@@ -27,9 +28,10 @@ data class NetworkMovie(
 /**
  * Convert Network results to database objects
  */
-fun NetworkMovieContainer.asDatabaseModel(): List<LocalMovie> {
+fun NetworkMovieContainer.asDatabaseModel(): List<Movie> {
     return results.map {
-        LocalMovie(
+        Movie(
+            id=it.id,
             title = it.title,
             overview = it.overview,
             posterPath = TMDB_IMAGEURL+it.posterPath,

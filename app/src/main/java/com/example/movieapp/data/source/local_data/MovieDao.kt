@@ -5,14 +5,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.paging.DataSource
-import com.example.movieapp.data.source.local_data.entity.LocalMovie
+import com.example.android.devbyteviewer.domain.Movie
 
 @Dao
 interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movies: List<LocalMovie>)
+    fun insert(movies: List<Movie>)
 
 
-    @Query("SELECT * FROM LocalMovie")
-    fun getMovies(): DataSource.Factory<Int, LocalMovie>
+    @Query("SELECT * FROM Movie")
+    fun getMovies(): DataSource.Factory<Int, Movie>
 }
