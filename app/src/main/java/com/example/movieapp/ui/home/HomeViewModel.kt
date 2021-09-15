@@ -10,11 +10,13 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+
+class HomeViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
@@ -25,6 +27,10 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
     private val _networkError = MutableLiveData<String>()
     val networkError: LiveData<String>
         get() = _networkError
+
+    private val _navigate = MutableLiveData<Movie>()
+    val navigate: LiveData<Movie>
+        get() = _navigate
 
     fun getMovies() {
         repository.getVideos()?.subscribeOn(Schedulers.io())
@@ -44,8 +50,8 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
             })
     }
 
-    fun downloadFile(movie: Movie) {
-        TODO("Not yet implemented")
+    fun onItemClicked(movie: Movie) {
+        _navigate.value = movie
     }
 
     override fun onCleared() {

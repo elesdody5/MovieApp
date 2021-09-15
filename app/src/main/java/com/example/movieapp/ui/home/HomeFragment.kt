@@ -3,11 +3,13 @@ package com.example.movieapp.ui.home
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.database.DatabaseUtils
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -43,7 +45,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         viewDataBinding = FragmentHomeBinding.bind(view)
-        movieAdapter = MovieListAdapter(MovieClickListener { viewModel.downloadFile(it) })
+        movieAdapter = MovieListAdapter(MovieClickListener { viewModel.onItemClicked(it) })
 
         viewDataBinding.moviesRv.apply {
             adapter = movieAdapter
@@ -52,6 +54,7 @@ class HomeFragment : Fragment() {
 
         viewModel.movies.observe(viewLifecycleOwner, Observer {
             it?.let {
+                viewDataBinding.progressCircular.visibility = GONE
                 movieAdapter.submitList(it)
             }
         })
@@ -60,6 +63,11 @@ class HomeFragment : Fragment() {
             Toast.makeText(context, "\uD83D\uDE28 Wooops $it", Toast.LENGTH_LONG).show()
         })
 
+        viewModel.navigate.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                HomeFragmentDirections.actionHomeFragmentToDownloadFragment(it)
+            }
+        })
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         return view
     }
