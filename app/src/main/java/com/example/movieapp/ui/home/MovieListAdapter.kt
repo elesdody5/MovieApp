@@ -5,18 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.devbyteviewer.domain.Movie
 import com.example.movieapp.R
 import com.example.movieapp.bindImage
+import com.example.movieapp.data.entity.Movie
 
 /**
  * Adapter for the list of repositories.
  */
 class MovieListAdapter(val onClickListener: MovieClickListener) :
-    PagedListAdapter<Movie, MovieListAdapter.MovieViewHolder>(MovieDiffCallback()) {
+    ListAdapter<Movie, MovieListAdapter.MovieViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder.create(parent)
@@ -25,15 +25,21 @@ class MovieListAdapter(val onClickListener: MovieClickListener) :
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position)
         holder.bind(movie)
-        holder.itemView.setOnClickListener { movie?.let {  onClickListener.onClick(it) } }
+        holder.itemView.setOnClickListener { movie?.let { onClickListener.onClick(it) } }
     }
 
     class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val name: TextView = view.findViewById(R.id.name_tv)
-        private val image = view.findViewById<ImageView>(R.id.movie_img)
+        private val name: TextView = view.findViewById(R.id.name)
+        private val image = view.findViewById<ImageView>(R.id.icon)
+        private val type: TextView = view.findViewById(R.id.type)
         fun bind(movie: Movie?) {
-            name.text = movie?.title
-            bindImage(image,movie?.posterPath)
+            name.text = movie?.name
+            type.text = movie?.type
+            val icon = if (movie?.type == "VIDEO") {
+                R.drawable.ic_baseline_videocam_24
+            } else R.drawable.ic_baseline_picture_as_pdf_24
+
+            bindImage(image, icon)
         }
 
         companion object {

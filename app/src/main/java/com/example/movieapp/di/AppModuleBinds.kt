@@ -1,7 +1,7 @@
 package com.example.movieapp.di
 
 
-import com.example.movieapp.data.repository.MovieGetway
+import com.example.movieapp.data.repository.MoviesRepository
 import com.example.movieapp.data.repository.Repository
 import dagger.Binds
 import dagger.Module
@@ -10,6 +10,6 @@ import dagger.Module
 abstract class AppModuleBinds {
 
     @Binds
-    abstract fun bindRepository(repo: Repository): MovieGetway
+    abstract fun bindRepository(repo: MoviesRepository): Repository
 
 }

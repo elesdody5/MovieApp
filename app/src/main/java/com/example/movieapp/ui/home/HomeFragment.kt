@@ -41,27 +41,25 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        viewDataBinding = FragmentHomeBinding.bind(view)
-        movieAdapter = MovieListAdapter(MovieClickListener { viewModel.openDetails(it) })
 
-        viewDataBinding.photosGrid.apply {
+        viewDataBinding = FragmentHomeBinding.bind(view)
+        movieAdapter = MovieListAdapter(MovieClickListener { viewModel.downloadFile(it) })
+
+        viewDataBinding.moviesRv.apply {
             adapter = movieAdapter
         }
+        viewModel.getMovies()
+
         viewModel.movies.observe(viewLifecycleOwner, Observer {
-            it?.let{
+            it?.let {
                 movieAdapter.submitList(it)
             }
         })
-        viewModel.openDetails.observe(viewLifecycleOwner,Observer{
-            it?.let{
-                val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(it)
-                findNavController().navigate(action)
-                viewModel.completeNavigation()
-            }
-        })
-        viewModel.networkErrors.observe(viewLifecycleOwner, Observer {
+
+        viewModel.networkError.observe(viewLifecycleOwner, Observer {
             Toast.makeText(context, "\uD83D\uDE28 Wooops $it", Toast.LENGTH_LONG).show()
         })
+
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         return view
     }

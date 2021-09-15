@@ -1,38 +1,32 @@
 package com.example.movieapp.di
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import com.example.android.devbyteviewer.domain.Movie
-import com.example.movieapp.data.repository.MovieBoundaryCallback
-import com.example.movieapp.data.source.local_data.LocalDataSource
-import com.example.movieapp.data.source.local_data.MovieLocalDataSource
-import com.example.movieapp.data.source.remote_data.MovieRemoteSource
-import com.example.movieapp.data.source.remote_data.RemoteDataSource
+import com.example.movieapp.data.remote_data.*
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.Dispatchers
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+
+private const val BASE_URL = "https://nagwa.free.beeceptor.com/"
 
 @Module
 class AppModuleProvider {
     @Provides
-    fun provideRemoteDataSource(): RemoteDataSource {
-        return MovieRemoteSource()
+    fun provideRemoteDataSource(api: MoviesApi): RemoteDataSource {
+        return MoviesRemoteDataSource(api)
     }
+
     @Provides
-    fun provideLocalDataSource(context: Context): LocalDataSource {
-        return MovieLocalDataSource(context)
-    }
-    @Provides
-    fun providePagingList(localDataSource: LocalDataSource,boundaryCallback:MovieBoundaryCallback):LiveData<PagedList<Movie>>{
-        return LivePagedListBuilder(localDataSource.getMovies(), DATABASE_PAGE_SIZE)
-            .setBoundaryCallback(boundaryCallback)
+    @Singleton
+    fun provideMovieApi(): MoviesApi {
+        // Configure retrofit to parse JSON and use coroutines
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
-    }
-    @Provides
-    fun provideIoDispatcher() = Dispatchers.IO
-    companion object {
-        private const val DATABASE_PAGE_SIZE = 10
+
+        return retrofit.create(MoviesApi::class.java)
     }
 }

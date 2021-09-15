@@ -1,9 +1,8 @@
-package com.example.movieapp.data.repository
+package com.example.movieapp.data.remote_data
 
 import com.example.movieapp.data.entity.Movie
 import io.reactivex.Single
 
-interface Repository {
+interface RemoteDataSource {
     fun getVideos(): Single<List<Movie>>?
-
 }

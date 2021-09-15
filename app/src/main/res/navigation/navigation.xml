@@ -8,19 +8,5 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.movieapp.ui.home.HomeFragment"
-        android:label="HomeFragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"
-            app:launchSingleTop="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailsFragment"
-        android:name="com.example.movieapp.ui.details.DetailsFragment"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details" >
-        <argument
-            android:name="movie"
-            app:argType="com.example.android.devbyteviewer.domain.Movie" />
-    </fragment>
+        android:label="HomeFragment" />
 </navigation>

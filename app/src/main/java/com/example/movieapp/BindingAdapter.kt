@@ -6,14 +6,11 @@ import coil.api.load
 
 
 /**
-* Uses the coil library to load an image by URL into an [ImageView]
-*/
+ * Uses the coil library to load an image by URL into an [ImageView]
+ */
 @BindingAdapter("imageUrl")
-fun bindImage(imgView: ImageView, imgUrl: String?) {
-       imgUrl?.let {
-              imgView.load(imgUrl) {
-                     placeholder(R.drawable.loading_animation)
-                     error(R.drawable.ic_broken_image)
-              }
-       }
+fun bindImage(imgView: ImageView, resourceId: Int?) {
+    resourceId?.let {
+        imgView.load(resourceId)
+    }
 }
